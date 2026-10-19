@@ -3,6 +3,7 @@ import TextInput from '../../components/TextInput/TextInput.tsx'
 
 type TitleProps = {
   value: string
+  errorMessage?: string
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -14,6 +15,7 @@ function Title(props: TitleProps) {
       maxLength={100}
       showCharacterCount
       value={props.value}
+      errorMessage={props.errorMessage}
       onChange={props.onChange}
     />
   )

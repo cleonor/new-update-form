@@ -3,6 +3,7 @@ import TextArea from '../../components/TextArea/TextArea.tsx'
 
 type UpdateProps = {
   value: string
+  errorMessage?: string
   onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void
 }
 
@@ -17,6 +18,7 @@ function Update(props: UpdateProps) {
       placeholder={placeholderText}
       showCharacterCount
       value={props.value}
+      errorMessage={props.errorMessage}
       onChange={props.onChange}
     />
   )

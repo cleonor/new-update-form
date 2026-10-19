@@ -36,6 +36,15 @@ describe('TextInput', () => {
     expect(input).toHaveAccessibleDescription('5 of 100 characters')
   })
 
+  it('shows an error message and marks the input invalid', () => {
+    render(<TextInput label="Title" errorMessage="Enter a title" />)
+    const input = screen.getByRole('textbox', { name: 'Title' })
+
+    expect(screen.getByText('Enter a title')).toBeInTheDocument()
+    expect(input).toHaveAttribute('aria-invalid', 'true')
+    expect(input).toHaveAccessibleDescription('Error: Enter a title')
+  })
+
   it('warns when the max length is reached', () => {
     render(<TextInput label="Title" maxLength={10} showCharacterCount />)
     const input = screen.getByRole('textbox', { name: 'Title' })

@@ -9,6 +9,7 @@ import { labelStyles } from '../../components/fieldStyles.ts'
 type AuthorProps = {
   value: string
   isEditable: boolean
+  errorMessage?: string
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
   onEditableChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
@@ -37,6 +38,7 @@ function Author(props: AuthorProps) {
         name="author"
         readOnly={!props.isEditable}
         value={props.value}
+        errorMessage={props.errorMessage}
         onChange={props.onChange}
       />
     </fieldset>

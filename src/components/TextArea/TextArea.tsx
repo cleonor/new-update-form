@@ -2,11 +2,12 @@ import { useId } from 'react'
 import type { ComponentProps } from 'react'
 import CharacterCount from '../CharacterCount/CharacterCount.tsx'
 import { useCharacterCount } from '../CharacterCount/useCharacterCount.ts'
+import FieldError from '../FieldError/FieldError.tsx'
 import {
-  atLimitStyles,
   controlStyles,
   fieldStyles,
   inactiveLabelStyles,
+  invalidStyles,
   labelStyles,
   textAreaStyles,
 } from '../fieldStyles.ts'
@@ -21,12 +22,18 @@ type TextAreaProps = Omit<ComponentProps<'textarea'>, 'id'> & {
    * @default false
    */
   showCharacterCount?: boolean
+  /**
+   * Validation message shown below the field, e.g. "Write your update". When set,
+   * the field is outlined in red and marked invalid for screen readers.
+   */
+  errorMessage?: string
 }
 
 function TextArea(props: TextAreaProps) {
-  // label and showCharacterCount aren't <textarea> attributes, so keep them out of the spread.
-  const { label, showCharacterCount, ...textAreaProps } = props
+  // label, showCharacterCount and errorMessage aren't <textarea> attributes, so keep them out of the spread.
+  const { label, showCharacterCount, errorMessage, ...textAreaProps } = props
   const id = useId()
+  const errorId = useId()
   const counterId = useId()
   const limitMessageId = useId()
   const { length, isAtLimit, handleChange } = useCharacterCount(
@@ -50,14 +57,21 @@ function TextArea(props: TextAreaProps) {
       <textarea
         {...textAreaProps}
         id={id}
-        css={[controlStyles, textAreaStyles, isAtLimit && atLimitStyles]}
+        css={[
+          controlStyles,
+          textAreaStyles,
+          (errorMessage || isAtLimit) && invalidStyles,
+        ]}
+        aria-invalid={errorMessage ? true : undefined}
         aria-describedby={joinIds(
           textAreaProps['aria-describedby'],
+          errorMessage && errorId,
           isAtLimit && limitMessageId,
           showCharacterCount && counterId,
         )}
         onChange={handleChange}
       />
+      {errorMessage && <FieldError id={errorId} message={errorMessage} />}
       <CharacterCount
         counterId={counterId}
         limitMessageId={limitMessageId}

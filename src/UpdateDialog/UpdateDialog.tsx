@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import type { Theme } from '@emotion/react'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import type {
   ChangeEvent,
   KeyboardEvent,
@@ -14,6 +15,8 @@ import Footer from './Footer/Footer.tsx'
 import type { FormStatus } from './Footer/Footer.tsx'
 import Title from './Title/Title.tsx'
 import Update from './Update/Update.tsx'
+import { getAuthorName } from './author.ts'
+import { validateFields } from './validation.ts'
 
 const EMPTY_FIELDS: DraftFields = {
   title: '',
@@ -27,6 +30,14 @@ function UpdateDialog() {
   const headingId = useId()
   const [fields, setFields] = useState<DraftFields>(EMPTY_FIELDS)
   const [status, setStatus] = useState<FormStatus | null>(null)
+  const formRef = useRef<HTMLFormElement>(null)
+
+  // Errors only show after the first save or publish attempt, then update live
+  // as fields are fixed. Once everything is fixed, the error summary goes too.
+  const [hasTriedSubmit, setHasTriedSubmit] = useState(false)
+  const errors = hasTriedSubmit ? validateFields(fields) : {}
+  const hasErrors = Object.keys(errors).length > 0
+  const visibleStatus = status?.kind === 'invalid' && !hasErrors ? null : status
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -81,29 +92,55 @@ function UpdateDialog() {
     [],
   )
 
-  // Clears the text fields and the saved draft; the author switch keeps its
-  // position. The status message tells screen reader users something happened.
+  // Clears the text fields, any errors and the saved draft; the author switch
+  // keeps its position. The status message tells screen reader users
+  // something happened.
   const handleCancelClick = useCallback(() => {
     setFields((current) => ({ ...current, title: '', content: '', author: '' }))
+    setHasTriedSubmit(false)
     clearDraft()
     setStatus({ kind: 'cleared', message: 'Form cleared.' })
   }, [])
 
-  // Publishing isn't implemented yet; for now it only confirms the click.
+  // Shared by Save draft and Publish update. Returns true when every field is
+  // filled in. Otherwise it shows the errors and summary first (flushSync), then
+  // moves focus to the first invalid field so screen readers read its error.
+  const validateAndReport = useCallback(() => {
+    const invalidFields = Object.keys(validateFields(fields))
+
+    if (invalidFields.length === 0) {
+      setHasTriedSubmit(true)
+      return true
+    }
+
+    flushSync(() => {
+      setHasTriedSubmit(true)
+      setStatus({
+        kind: 'invalid',
+        message:
+          invalidFields.length === 1
+            ? '1 field needs attention.'
+            : `${invalidFields.length} fields need attention.`,
+      })
+    })
+    const firstInvalid = formRef.current?.elements.namedItem(invalidFields[0])
+    if (firstInvalid instanceof HTMLElement) firstInvalid.focus()
+    return false
+  }, [fields])
+
+  // Publishing isn't implemented yet; for now it validates and confirms the click.
   const handlePublishClick = useCallback(() => {
+    if (!validateAndReport()) return
     setStatus({ kind: 'published', message: 'Published' })
-  }, [])
+  }, [validateAndReport])
 
   // The time makes each message different, so screen readers announce every save.
   const handleSubmit = useCallback(
     (event: SubmitEvent<HTMLFormElement>) => {
       event.preventDefault()
-      // The name stays visible while editing is off, but a custom author only
-      // applies while editing is on, so it's left out of the saved draft.
-      const draft = saveDraft({
-        ...fields,
-        author: fields.isAuthorEditable ? fields.author : '',
-      })
+      if (!validateAndReport()) return
+
+      const draft = saveDraft({ ...fields, author: getAuthorName(fields) })
       setStatus(
         draft
           ? {
@@ -117,7 +154,7 @@ function UpdateDialog() {
             },
       )
     },
-    [fields],
+    [fields, validateAndReport],
   )
 
   return (
@@ -128,18 +165,27 @@ function UpdateDialog() {
       onKeyDown={handleKeyDown}
       onCancel={handleCancel}
     >
-      <form css={formStyles} onSubmit={handleSubmit}>
+      <form ref={formRef} css={formStyles} noValidate onSubmit={handleSubmit}>
         <h1 id={headingId}>New update</h1>
-        <Title value={fields.title} onChange={handleTitleChange} />
-        <Update value={fields.content} onChange={handleContentChange} />
+        <Title
+          value={fields.title}
+          errorMessage={errors.title}
+          onChange={handleTitleChange}
+        />
+        <Update
+          value={fields.content}
+          errorMessage={errors.content}
+          onChange={handleContentChange}
+        />
         <Author
-          value={fields.author}
+          value={getAuthorName(fields)}
           isEditable={fields.isAuthorEditable}
+          errorMessage={errors.author}
           onChange={handleAuthorChange}
           onEditableChange={handleAuthorEditableChange}
         />
         <Footer
-          status={status}
+          status={visibleStatus}
           onCancel={handleCancelClick}
           onPublish={handlePublishClick}
         />

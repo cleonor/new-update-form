@@ -3,6 +3,16 @@ import { describe, expect, it, vi } from 'vitest'
 import { loadDraft } from '../storage/draftStorage.ts'
 import UpdateDialog from './UpdateDialog.tsx'
 
+// Fills in the fields every save and publish needs.
+function fillRequiredFields() {
+  fireEvent.change(screen.getByLabelText('Title'), {
+    target: { value: 'Release notes' },
+  })
+  fireEvent.change(screen.getByLabelText('Update'), {
+    target: { value: 'Version 2 is out.' },
+  })
+}
+
 describe('UpdateDialog', () => {
   it('opens with the title, update and author fields', () => {
     render(<UpdateDialog />)
@@ -10,7 +20,9 @@ describe('UpdateDialog', () => {
     expect(screen.getByRole('dialog', { name: 'New update' })).toBeVisible()
     expect(screen.getByLabelText('Title')).toBeInTheDocument()
     expect(screen.getByLabelText('Update')).toBeInTheDocument()
-    expect(screen.getByLabelText('Author name')).toBeInTheDocument()
+    expect(screen.getByLabelText('Author name')).toHaveValue(
+      'Petra Petitionsstarterin',
+    )
   })
 
   it('warns when the title reaches 100 characters', () => {
@@ -106,11 +118,12 @@ describe('UpdateDialog', () => {
     expect(screen.getByRole('status')).toHaveTextContent(/^Draft saved at/)
   })
 
-  it('keeps showing but stops saving the author name when editing is turned off', () => {
+  it('uses the default author while Change author is off, and restores the custom name when on', () => {
     render(<UpdateDialog />)
     const toggle = screen.getByRole('switch', { name: 'Change author' })
     const author = screen.getByLabelText('Author name')
     const saveButton = screen.getByRole('button', { name: 'Save draft' })
+    fillRequiredFields()
 
     fireEvent.click(toggle)
     fireEvent.change(author, { target: { value: 'Sam' } })
@@ -121,9 +134,12 @@ describe('UpdateDialog', () => {
     fireEvent.click(toggle)
     fireEvent.click(saveButton)
 
-    expect(author).toHaveValue('Sam')
+    expect(author).toHaveValue('Petra Petitionsstarterin')
     expect(author).toHaveAttribute('readonly')
-    expect(loadDraft()).toMatchObject({ author: '', isAuthorEditable: false })
+    expect(loadDraft()).toMatchObject({
+      author: 'Petra Petitionsstarterin',
+      isAuthorEditable: false,
+    })
 
     fireEvent.click(toggle)
 
@@ -156,11 +172,14 @@ describe('UpdateDialog', () => {
     expect(screen.getByRole('dialog')).toBeVisible()
   })
 
-  it('only shows a Published message when Publish update is clicked', () => {
+  it('only shows a Published message when a valid update is published', () => {
     render(<UpdateDialog />)
     const title = screen.getByLabelText('Title')
 
     fireEvent.change(title, { target: { value: 'Release notes' } })
+    fireEvent.change(screen.getByLabelText('Update'), {
+      target: { value: 'Version 2 is out.' },
+    })
     fireEvent.click(screen.getByRole('button', { name: 'Publish update' }))
 
     expect(screen.getByRole('status')).toHaveTextContent('Published')
@@ -169,11 +188,119 @@ describe('UpdateDialog', () => {
     expect(screen.getByRole('dialog')).toBeVisible()
   })
 
+  describe('publish validation', () => {
+    it('blocks publishing, shows errors and focuses the first invalid field', () => {
+      render(<UpdateDialog />)
+      const title = screen.getByLabelText('Title')
+      const update = screen.getByLabelText('Update')
+
+      fireEvent.click(screen.getByRole('button', { name: 'Publish update' }))
+
+      expect(screen.getByRole('status')).toHaveTextContent(
+        '2 fields need attention.',
+      )
+      expect(screen.getByRole('status')).not.toHaveTextContent('Published')
+      expect(title).toHaveAttribute('aria-invalid', 'true')
+      expect(title).toHaveAccessibleDescription(
+        expect.stringContaining('Error: Enter a title'),
+      )
+      expect(update).toHaveAttribute('aria-invalid', 'true')
+      expect(update).toHaveAccessibleDescription(
+        expect.stringContaining('Error: Write your update'),
+      )
+      expect(title).toHaveFocus()
+    })
+
+    it('treats text with only spaces as empty', () => {
+      render(<UpdateDialog />)
+
+      fireEvent.change(screen.getByLabelText('Title'), {
+        target: { value: '   ' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Publish update' }))
+
+      expect(screen.getByText('Enter a title')).toBeInTheDocument()
+    })
+
+    it('requires an author name only when Change author is on', () => {
+      render(<UpdateDialog />)
+      fireEvent.change(screen.getByLabelText('Title'), {
+        target: { value: 'Release notes' },
+      })
+      fireEvent.change(screen.getByLabelText('Update'), {
+        target: { value: 'Version 2 is out.' },
+      })
+      fireEvent.click(screen.getByRole('switch', { name: 'Change author' }))
+
+      fireEvent.click(screen.getByRole('button', { name: 'Publish update' }))
+
+      expect(screen.getByRole('status')).toHaveTextContent(
+        '1 field needs attention.',
+      )
+      expect(screen.getByLabelText('Author name')).toHaveFocus()
+      expect(screen.getByText('Enter an author name')).toBeInTheDocument()
+
+      fireEvent.click(screen.getByRole('switch', { name: 'Change author' }))
+      fireEvent.click(screen.getByRole('button', { name: 'Publish update' }))
+
+      expect(screen.getByRole('status')).toHaveTextContent('Published')
+    })
+
+    it('clears each error as soon as its field is fixed', () => {
+      render(<UpdateDialog />)
+      const title = screen.getByLabelText('Title')
+
+      fireEvent.click(screen.getByRole('button', { name: 'Publish update' }))
+      fireEvent.change(title, { target: { value: 'Release notes' } })
+
+      expect(screen.queryByText('Enter a title')).not.toBeInTheDocument()
+      expect(title).not.toHaveAttribute('aria-invalid')
+      expect(screen.getByText('Write your update')).toBeInTheDocument()
+
+      fireEvent.change(screen.getByLabelText('Update'), {
+        target: { value: 'Version 2 is out.' },
+      })
+
+      expect(screen.getByRole('status')).toBeEmptyDOMElement()
+    })
+
+    it('does not show errors before the first publish attempt', () => {
+      render(<UpdateDialog />)
+
+      expect(screen.getByLabelText('Title')).not.toHaveAttribute('aria-invalid')
+      expect(screen.queryByText('Enter a title')).not.toBeInTheDocument()
+    })
+
+    it('blocks saving an incomplete draft the same way', () => {
+      render(<UpdateDialog />)
+
+      fireEvent.click(screen.getByRole('button', { name: 'Save draft' }))
+
+      expect(loadDraft()).toBeNull()
+      expect(screen.getByRole('status')).toHaveTextContent(
+        '2 fields need attention.',
+      )
+      expect(screen.getByText('Enter a title')).toBeInTheDocument()
+      expect(screen.getByLabelText('Title')).toHaveFocus()
+    })
+
+    it('clears the errors when Cancel is clicked', () => {
+      render(<UpdateDialog />)
+
+      fireEvent.click(screen.getByRole('button', { name: 'Publish update' }))
+      fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+
+      expect(screen.queryByText('Enter a title')).not.toBeInTheDocument()
+      expect(screen.getByLabelText('Title')).not.toHaveAttribute('aria-invalid')
+    })
+  })
+
   it('shows an error message when the draft cannot be saved', () => {
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new Error('QuotaExceededError')
     })
     render(<UpdateDialog />)
+    fillRequiredFields()
 
     fireEvent.click(screen.getByRole('button', { name: 'Save draft' }))
 

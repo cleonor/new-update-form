@@ -4,7 +4,12 @@ import Button from '../../components/Button/Button.tsx'
 import Tag from '../../components/Tag/Tag.tsx'
 import type { TagIntent } from '../../components/Tag/Tag.tsx'
 
-export type FormStatusKind = 'draftSaved' | 'draftNotSaved' | 'cleared' | 'published'
+export type FormStatusKind =
+  | 'draftSaved'
+  | 'draftNotSaved'
+  | 'cleared'
+  | 'published'
+  | 'invalid'
 
 export type FormStatus = {
   kind: FormStatusKind
@@ -54,6 +59,7 @@ const statusIntents: Record<FormStatusKind, TagIntent> = {
   draftNotSaved: 'error',
   cleared: 'neutral',
   published: 'accent',
+  invalid: 'error',
 }
 
 const footerStyles = (theme: Theme) => css`

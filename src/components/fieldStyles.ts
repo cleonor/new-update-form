@@ -55,9 +55,10 @@ export const textAreaStyles = css`
   resize: vertical;
 `
 
-// Character limit reached: red border, and a red focus ring instead of blue.
-// The warning message below the field says the same thing, so colour isn't the only signal.
-export const atLimitStyles = (theme: Theme) => css`
+// Validation error or character limit reached: red border, and a red focus ring
+// instead of blue. The message below the field says the same thing, so colour
+// isn't the only signal.
+export const invalidStyles = (theme: Theme) => css`
   border-color: ${theme.colors.intents.error.text};
 
   &:focus-visible {

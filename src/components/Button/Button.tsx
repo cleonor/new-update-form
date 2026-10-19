@@ -4,10 +4,6 @@ import type { ComponentProps } from 'react'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'link'
 
-// Accepts every native <button> attribute. Defaults to type="button" so it never
-// submits a form by accident; pass type="submit" for the submit button.
-// `variant`: primary (filled orange), secondary (purple outline, the default)
-// or link (underlined text, for low-emphasis actions).
 type ButtonProps = ComponentProps<'button'> & {
   variant?: ButtonVariant
 }
@@ -27,8 +23,6 @@ function Button(props: ButtonProps) {
 
 export default Button
 
-// 3rem tall for a comfortable touch target. The 2px transparent border keeps
-// every variant the same size and shows up in Windows high contrast mode.
 const baseStyles = (theme: Theme) => css`
   display: inline-flex;
   align-items: center;

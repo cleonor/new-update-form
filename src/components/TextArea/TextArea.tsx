@@ -12,11 +12,14 @@ import {
 } from '../fieldStyles.ts'
 import { joinIds } from '../joinIds.ts'
 
-// Accepts every native <textarea> attribute (disabled, readOnly, name, rows, maxLength, …).
-// `id` is generated so the label is always linked to the textarea.
-// With maxLength, reaching the limit outlines the field in red and shows a warning.
 type TextAreaProps = Omit<ComponentProps<'textarea'>, 'id'> & {
   label: string
+  /**
+   * Shows a character counter below the field: "12/100 characters" with
+   * `maxLength`, or "12 characters" without. Screen readers hear
+   * "12 of 100 characters" when the field is focused.
+   * @default false
+   */
   showCharacterCount?: boolean
 }
 

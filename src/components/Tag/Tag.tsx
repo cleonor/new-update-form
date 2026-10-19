@@ -8,17 +8,15 @@ export type TagIntent = Intent
 type TagProps = {
   children: ReactNode
   intent?: TagIntent
-  icon?: ReactNode
 }
 
-// Colour and icon only reinforce the intent, so the text itself must say what
-// it means (e.g. "Draft saved", not just a coloured pill with a tick).
+// Colour only reinforces the intent, so the text itself must say what it means
+// (e.g. "Draft saved", not just a coloured pill).
 function Tag(props: TagProps) {
   const intent = props.intent ?? 'neutral'
 
   return (
     <span css={[baseStyles, intentStyles(intent)]} data-intent={intent}>
-      {props.icon}
       {props.children}
     </span>
   )
@@ -29,7 +27,6 @@ export default Tag
 const baseStyles = (theme: Theme) => css`
   display: inline-flex;
   align-items: center;
-  gap: ${theme.space.sm};
   padding: ${theme.space.xs} ${theme.space.md};
   /* Transparent normally, but shown in Windows high contrast mode. */
   border: 1px solid transparent;

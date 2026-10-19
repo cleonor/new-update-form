@@ -18,8 +18,6 @@ function Author(props: AuthorProps) {
   const placeholderText: string = "You can choose to publish this update under a different name.";
 
   return (
-    // Named with aria-labelledby instead of <legend>: browsers (Safari especially)
-    // don't reliably lay out a legend side by side with other content.
     <fieldset css={fieldsetStyles} aria-labelledby={titleId}>
       <div css={headerStyles}>
         <span id={titleId} css={labelStyles}>
@@ -56,8 +54,6 @@ const fieldsetStyles = (theme: Theme) => css`
   border: 0;
 `
 
-// Title on the left, switch on the right. Baseline alignment lines up
-// "Author" with the switch's label text, whatever the switch's height.
 const headerStyles = (theme: Theme) => css`
   display: flex;
   align-items: baseline;

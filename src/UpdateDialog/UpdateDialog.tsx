@@ -151,7 +151,6 @@ function UpdateDialog() {
 export default UpdateDialog
 
 // Taller content (e.g. a resized textarea) scrolls inside the dialog.
-// dvh follows the visible viewport on mobile; vh is the fallback.
 const dialogStyles = (theme: Theme) => css`
   width: min(36rem, calc(100vw - 2rem));
   max-height: 80vh;

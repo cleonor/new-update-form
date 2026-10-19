@@ -4,10 +4,6 @@ import { useCallback, useId } from 'react'
 import type { ComponentProps, KeyboardEvent } from 'react'
 import { joinIds } from '../joinIds.ts'
 
-// Accepts every native checkbox attribute (disabled, name, checked, onChange, …).
-// `isSwitch` announces it as an on/off switch to screen readers.
-// `infoText` is shown below and read as the checkbox's description.
-// `align` places the control at the start (default) or end of its container.
 type CheckboxProps = Omit<ComponentProps<'input'>, 'id' | 'type' | 'role'> & {
   label: string
   isSwitch?: boolean

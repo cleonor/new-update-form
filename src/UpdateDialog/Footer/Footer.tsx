@@ -1,12 +1,6 @@
 import { css } from '@emotion/react'
 import type { Theme } from '@emotion/react'
-import type { ComponentType } from 'react'
 import Button from '../../components/Button/Button.tsx'
-import CheckIcon from '../../components/icons/CheckIcon.tsx'
-import CircleAlertIcon from '../../components/icons/CircleAlertIcon.tsx'
-import CircleCheckIcon from '../../components/icons/CircleCheckIcon.tsx'
-import SendIcon from '../../components/icons/SendIcon.tsx'
-import UndoIcon from '../../components/icons/UndoIcon.tsx'
 import Tag from '../../components/Tag/Tag.tsx'
 import type { TagIntent } from '../../components/Tag/Tag.tsx'
 
@@ -24,7 +18,10 @@ type FooterProps = {
 }
 
 function Footer(props: FooterProps) {
-  const appearance = props.status && statusAppearance[props.status.kind]
+  // The pill for the current status, or nothing when there isn't one.
+  const statusTag = props.status ? (
+    <Tag intent={statusIntents[props.status.kind]}>{props.status.message}</Tag>
+  ) : null
 
   return (
     <div css={footerStyles}>
@@ -32,11 +29,7 @@ function Footer(props: FooterProps) {
           one pill, so screen readers announce each message and the dialog
           doesn't change height when one appears. */}
       <p role="status" css={statusStyles}>
-        {props.status && appearance && (
-          <Tag intent={appearance.intent} icon={<appearance.Icon />}>
-            {props.status.message}
-          </Tag>
-        )}
+        {statusTag}
       </p>
 
       <div css={actionsStyles}>
@@ -47,7 +40,6 @@ function Footer(props: FooterProps) {
           Save draft
         </Button>
         <Button variant="primary" onClick={props.onPublish}>
-          <SendIcon />
           Publish update
         </Button>
       </div>
@@ -57,14 +49,11 @@ function Footer(props: FooterProps) {
 
 export default Footer
 
-const statusAppearance: Record<
-  FormStatusKind,
-  { intent: TagIntent; Icon: ComponentType }
-> = {
-  draftSaved: { intent: 'brand', Icon: CheckIcon },
-  draftNotSaved: { intent: 'error', Icon: CircleAlertIcon },
-  cleared: { intent: 'neutral', Icon: UndoIcon },
-  published: { intent: 'accent', Icon: CircleCheckIcon },
+const statusIntents: Record<FormStatusKind, TagIntent> = {
+  draftSaved: 'brand',
+  draftNotSaved: 'error',
+  cleared: 'neutral',
+  published: 'accent',
 }
 
 const footerStyles = (theme: Theme) => css`

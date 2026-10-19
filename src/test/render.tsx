@@ -1,5 +1,3 @@
-// Test-only helper, never hot-reloaded, so mixing exports here is fine.
-/* oxlint-disable react/only-export-components */
 import { ThemeProvider } from '@emotion/react'
 import { render } from '@testing-library/react'
 import type { RenderOptions } from '@testing-library/react'

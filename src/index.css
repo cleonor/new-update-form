@@ -4,6 +4,18 @@
   --font-body: 'Soehne Buch', system-ui, sans-serif;
   --font-medium: 'Soehne Kraeftig', system-ui, sans-serif;
   --font-bold: 'Soehne Dreiviertelfett', system-ui, sans-serif;
+
+  /* Intent colours. Each text colour meets WCAG AA (4.5:1) on its background and on white. */
+  --color-neutral: #333333;
+  --color-neutral-bg: #f0f0f0;
+  --color-info: #0a4a8a;
+  --color-info-bg: #e6f0fb;
+  --color-success: #1e6b34;
+  --color-success-bg: #e6f4ea;
+  --color-warning: #7a4b00;
+  --color-warning-bg: #fff4e0;
+  --color-error: #a1261f;
+  --color-error-bg: #fdeaea;
 }
 
 body {

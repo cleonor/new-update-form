@@ -7,6 +7,7 @@ import '../field.css'
 
 // Accepts every native <input> attribute (disabled, readOnly, name, value, maxLength, …).
 // `id` is generated so the label is always linked to the input.
+// With maxLength, reaching the limit outlines the field in red and shows a warning.
 type TextInputProps = Omit<ComponentProps<'input'>, 'id' | 'type'> & {
   label: string
   showCharacterCount?: boolean
@@ -17,14 +18,16 @@ function TextInput(props: TextInputProps) {
   const { label, showCharacterCount, ...inputProps } = props
   const id = useId()
   const counterId = useId()
-  const { length, handleChange } = useCharacterCount(
+  const limitMessageId = useId()
+  const { length, isAtLimit, handleChange } = useCharacterCount(
     inputProps.value,
     inputProps.defaultValue,
+    inputProps.maxLength,
     inputProps.onChange,
   )
 
   return (
-    <div className="field">
+    <div className={isAtLimit ? 'field field--at-limit' : 'field'}>
       <label htmlFor={id}>{label}</label>
       <input
         {...inputProps}
@@ -32,17 +35,18 @@ function TextInput(props: TextInputProps) {
         type="text"
         aria-describedby={joinIds(
           inputProps['aria-describedby'],
+          isAtLimit && limitMessageId,
           showCharacterCount && counterId,
         )}
         onChange={handleChange}
       />
-      {showCharacterCount && (
-        <CharacterCount
-          id={counterId}
-          length={length}
-          maxLength={inputProps.maxLength}
-        />
-      )}
+      <CharacterCount
+        counterId={counterId}
+        limitMessageId={limitMessageId}
+        length={length}
+        maxLength={inputProps.maxLength}
+        showCount={showCharacterCount ?? false}
+      />
     </div>
   )
 }

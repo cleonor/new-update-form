@@ -35,4 +35,22 @@ describe('TextInput', () => {
     expect(screen.getByText('5/100 characters')).toBeInTheDocument()
     expect(input).toHaveAccessibleDescription('5 of 100 characters')
   })
+
+  it('warns when the max length is reached', () => {
+    render(<TextInput label="Title" maxLength={10} showCharacterCount />)
+    const input = screen.getByRole('textbox', { name: 'Title' })
+    const message = "You've reached the maximum of 10 characters."
+
+    fireEvent.change(input, { target: { value: '123456789' } })
+
+    expect(screen.queryByText(message)).not.toBeInTheDocument()
+
+    fireEvent.change(input, { target: { value: '1234567890' } })
+
+    expect(screen.getByText(message)).toHaveAttribute('aria-live', 'polite')
+    expect(input).toHaveAccessibleDescription(
+      `${message} 10 of 10 characters`,
+    )
+    expect(input).not.toHaveAttribute('aria-invalid')
+  })
 })

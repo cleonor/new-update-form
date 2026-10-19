@@ -1,7 +1,19 @@
-/* #595959 on white is 7:1, above the WCAG AA 4.5:1 minimum. */
 .character-count {
-  align-self: flex-end;
-  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
   font-size: 0.875rem;
+}
+
+/* Error red on white is 7.5:1. */
+.character-count__limit {
+  margin: 0;
+  color: var(--color-error);
+}
+
+/* Pushed right even when there's no limit message. #595959 on white is 7:1. */
+.character-count__count {
+  margin: 0 0 0 auto;
   color: #595959;
+  white-space: nowrap;
 }

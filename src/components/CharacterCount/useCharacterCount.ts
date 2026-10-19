@@ -10,6 +10,7 @@ export function useCharacterCount<
 >(
   value: FieldValue,
   defaultValue: FieldValue,
+  maxLength: number | undefined,
   onChange: ((event: ChangeEvent<T>) => void) | undefined,
 ) {
   const [uncontrolledLength, setUncontrolledLength] = useState(
@@ -25,6 +26,7 @@ export function useCharacterCount<
   )
 
   const length = value === undefined ? uncontrolledLength : String(value).length
+  const isAtLimit = maxLength !== undefined && length >= maxLength
 
-  return { length, handleChange }
+  return { length, isAtLimit, handleChange }
 }

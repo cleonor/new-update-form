@@ -13,6 +13,18 @@ describe('UpdateDialog', () => {
     expect(screen.getByLabelText('Author name')).toBeInTheDocument()
   })
 
+  it('warns when the title reaches 100 characters', () => {
+    render(<UpdateDialog />)
+
+    fireEvent.change(screen.getByLabelText('Title'), {
+      target: { value: 'a'.repeat(100) },
+    })
+
+    expect(
+      screen.getByText("You've reached the maximum of 100 characters."),
+    ).toBeInTheDocument()
+  })
+
   it('shows a placeholder in the update field', () => {
     render(<UpdateDialog />)
 

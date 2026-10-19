@@ -1,5 +1,11 @@
+import UpdateDialog from './UpdateDialog/UpdateDialog.tsx'
+
 function App() {
-  return <h1>Hello, world!</h1>
+  return (
+    <main>
+      <UpdateDialog />
+    </main>
+  )
 }
 
 export default App

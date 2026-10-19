@@ -1,0 +1,36 @@
+/* Every text/background pair meets WCAG AA contrast (4.5:1 or more). */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  /* Transparent normally, but shown in Windows high contrast mode. */
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: var(--font-medium);
+  font-size: 0.875rem;
+}
+
+.tag--neutral {
+  background: #f0f0f0;
+  color: #333333;
+}
+
+.tag--info {
+  background: #e6f0fb;
+  color: #0a4a8a;
+}
+
+.tag--success {
+  background: #e6f4ea;
+  color: #1e6b34;
+}
+
+.tag--warning {
+  background: #fff4e0;
+  color: #7a4b00;
+}
+
+.tag--error {
+  background: #fdeaea;
+  color: #a1261f;
+}

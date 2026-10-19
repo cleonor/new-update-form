@@ -1,7 +1,14 @@
+import Tag from '../../components/Tag/Tag.tsx'
+import type { TagIntent } from '../../components/Tag/Tag.tsx'
 import './Footer.css'
 
+export type SaveStatus = {
+  message: string
+  intent: TagIntent
+}
+
 type FooterProps = {
-  statusMessage: string
+  status: SaveStatus | null
 }
 
 function Footer(props: FooterProps) {
@@ -16,7 +23,9 @@ function Footer(props: FooterProps) {
       {/* Live region for the save confirmation. It's always in the DOM so
           screen readers announce the message when it changes. */}
       <p role="status" className="status">
-        {props.statusMessage}
+        {props.status && (
+          <Tag intent={props.status.intent}>{props.status.message}</Tag>
+        )}
       </p>
     </div>
   )

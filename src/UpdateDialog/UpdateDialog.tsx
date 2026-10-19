@@ -9,6 +9,7 @@ import { saveDraft } from '../storage/draftStorage.ts'
 import type { DraftFields } from '../storage/draftStorage.ts'
 import Author from './Author/Author.tsx'
 import Footer from './Footer/Footer.tsx'
+import type { SaveStatus } from './Footer/Footer.tsx'
 import Title from './Title/Title.tsx'
 import Update from './Update/Update.tsx'
 import './UpdateDialog.css'
@@ -24,7 +25,7 @@ function UpdateDialog() {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const headingId = useId()
   const [fields, setFields] = useState<DraftFields>(EMPTY_FIELDS)
-  const [statusMessage, setStatusMessage] = useState('')
+  const [status, setStatus] = useState<SaveStatus | null>(null)
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -89,10 +90,17 @@ function UpdateDialog() {
         ...fields,
         author: fields.isAuthorEditable ? fields.author : '',
       })
-      setStatusMessage(
+      setStatus(
         draft
-          ? `Draft saved at ${new Date(draft.savedAt).toLocaleTimeString()}.`
-          : "Draft couldn't be saved. Your browser's storage may be full or blocked.",
+          ? {
+              message: `Draft saved at ${new Date(draft.savedAt).toLocaleTimeString()}.`,
+              intent: 'success',
+            }
+          : {
+              message:
+                "Draft couldn't be saved. Your browser's storage may be full or blocked.",
+              intent: 'error',
+            },
       )
     },
     [fields],
@@ -116,7 +124,7 @@ function UpdateDialog() {
           onChange={handleAuthorChange}
           onEditableChange={handleAuthorEditableChange}
         />
-        <Footer statusMessage={statusMessage} />
+        <Footer status={status} />
       </form>
     </dialog>
   )

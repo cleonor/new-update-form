@@ -11,6 +11,11 @@
   padding: 0.5rem;
 }
 
+/* Only the height can be changed, so a textarea never grows wider than its container. */
+.field textarea {
+  resize: vertical;
+}
+
 .field input:read-only,
 .field textarea:read-only {
   background: #f0f0f0;

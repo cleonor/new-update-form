@@ -1,0 +1,7 @@
+/* #595959 on white is 7:1, above the WCAG AA 4.5:1 minimum. */
+.character-count {
+  align-self: flex-end;
+  margin: 0;
+  font-size: 0.875rem;
+  color: #595959;
+}

@@ -11,6 +11,8 @@ function Title(props: TitleProps) {
     <TextInput
       label="Title"
       name="title"
+      maxLength={100}
+      showCharacterCount
       value={props.value}
       onChange={props.onChange}
     />

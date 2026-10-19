@@ -12,6 +12,7 @@ function Update(props: UpdateProps) {
       label="Update"
       name="content"
       rows={6}
+      showCharacterCount
       value={props.value}
       onChange={props.onChange}
     />

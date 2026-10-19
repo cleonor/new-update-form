@@ -6,6 +6,8 @@ import {
   atLimitStyles,
   controlStyles,
   fieldStyles,
+  inactiveLabelStyles,
+  labelStyles,
   textAreaStyles,
 } from '../fieldStyles.ts'
 import { joinIds } from '../joinIds.ts'
@@ -33,7 +35,15 @@ function TextArea(props: TextAreaProps) {
 
   return (
     <div css={fieldStyles}>
-      <label htmlFor={id}>{label}</label>
+      <label
+        htmlFor={id}
+        css={[
+          labelStyles,
+          (textAreaProps.readOnly || textAreaProps.disabled) && inactiveLabelStyles,
+        ]}
+      >
+        {label}
+      </label>
       <textarea
         {...textAreaProps}
         id={id}

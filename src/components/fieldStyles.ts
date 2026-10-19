@@ -8,11 +8,22 @@ export const fieldStyles = (theme: Theme) => css`
   gap: ${theme.space.xs};
 `
 
+export const labelStyles = (theme: Theme) => css`
+  font-family: ${theme.fonts.medium};
+`
+
+// Read-only or disabled fields get a muted label (still 6.2:1 or more).
+export const inactiveLabelStyles = (theme: Theme) => css`
+  color: ${theme.colors.mutedText};
+`
+
 export const controlStyles = (theme: Theme) => css`
   font: inherit;
-  padding: ${theme.space.sm};
+  color: ${theme.colors.text};
+  padding: ${theme.space.sm} ${theme.space.md};
   border: 1px solid ${theme.colors.border};
   border-radius: ${theme.radii.default};
+  background: ${theme.colors.surface};
 
   /* Placeholders are hints only; the label always names the field.
      Firefox lowers placeholder opacity by default, so reset it. */
@@ -22,6 +33,7 @@ export const controlStyles = (theme: Theme) => css`
   }
 
   &:read-only {
+    border-color: ${theme.colors.readOnlyBorder};
     background: ${theme.colors.readOnlyBackground};
   }
 

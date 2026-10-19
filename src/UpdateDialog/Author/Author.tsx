@@ -4,6 +4,7 @@ import { useId } from 'react'
 import type { ChangeEvent } from 'react'
 import Checkbox from '../../components/Checkbox/Checkbox.tsx'
 import TextInput from '../../components/TextInput/TextInput.tsx'
+import { labelStyles } from '../../components/fieldStyles.ts'
 
 type AuthorProps = {
   value: string
@@ -21,7 +22,9 @@ function Author(props: AuthorProps) {
     // don't reliably lay out a legend side by side with other content.
     <fieldset css={fieldsetStyles} aria-labelledby={titleId}>
       <div css={headerStyles}>
-        <span id={titleId}>Author</span>
+        <span id={titleId} css={labelStyles}>
+          Author
+        </span>
         <Checkbox
           label="Change author"
           isSwitch

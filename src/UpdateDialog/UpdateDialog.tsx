@@ -148,9 +148,10 @@ const dialogStyles = (theme: Theme) => css`
   max-height: 80vh;
   max-height: 80dvh;
   overflow-y: auto;
-  padding: ${theme.space.lg};
-  border: 1px solid ${theme.colors.border};
+  padding: ${theme.space.xl};
+  border: none;
   border-radius: ${theme.radii.default};
+  background: ${theme.colors.surface};
 
   &::backdrop {
     background: ${theme.colors.backdrop};
@@ -160,10 +161,9 @@ const dialogStyles = (theme: Theme) => css`
 const formStyles = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
-  gap: ${theme.space.md};
+  gap: ${theme.space.lg};
 
   h1 {
     margin: 0;
-    font-size: ${theme.fontSizes.heading};
   }
 `

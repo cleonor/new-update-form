@@ -2,7 +2,13 @@ import { useId } from 'react'
 import type { ComponentProps } from 'react'
 import CharacterCount from '../CharacterCount/CharacterCount.tsx'
 import { useCharacterCount } from '../CharacterCount/useCharacterCount.ts'
-import { atLimitStyles, controlStyles, fieldStyles } from '../fieldStyles.ts'
+import {
+  atLimitStyles,
+  controlStyles,
+  fieldStyles,
+  inactiveLabelStyles,
+  labelStyles,
+} from '../fieldStyles.ts'
 import { joinIds } from '../joinIds.ts'
 
 // Accepts every native <input> attribute (disabled, readOnly, name, value, maxLength, …).
@@ -28,7 +34,15 @@ function TextInput(props: TextInputProps) {
 
   return (
     <div css={fieldStyles}>
-      <label htmlFor={id}>{label}</label>
+      <label
+        htmlFor={id}
+        css={[
+          labelStyles,
+          (inputProps.readOnly || inputProps.disabled) && inactiveLabelStyles,
+        ]}
+      >
+        {label}
+      </label>
       <input
         {...inputProps}
         id={id}

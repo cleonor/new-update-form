@@ -83,16 +83,16 @@ const disabledStyles = css`
   }
 `
 
-// A track with a sliding thumb. The thumb's position shows the state,
-// so it doesn't rely on colour alone.
+// A track with a sliding thumb: off is a dark thumb on white, on is a white thumb
+// on purple. The thumb's position shows the state, so it doesn't rely on colour alone.
 const switchStyles = (theme: Theme) => css`
   appearance: none;
   position: relative;
   flex-shrink: 0;
-  width: 2.75rem;
-  height: 1.5rem;
+  width: 3.25rem;
+  height: 1.75rem;
   margin: 0;
-  border: 1px solid ${theme.colors.switch};
+  border: 2px solid ${theme.colors.text};
   border-radius: ${theme.radii.pill};
   background: ${theme.colors.surface};
   cursor: pointer;
@@ -102,20 +102,21 @@ const switchStyles = (theme: Theme) => css`
     position: absolute;
     top: 2px;
     left: 2px;
-    width: calc(1.5rem - 6px);
-    height: calc(1.5rem - 6px);
-    border: 1px solid ${theme.colors.switch};
+    width: calc(1.75rem - 8px);
+    height: calc(1.75rem - 8px);
     border-radius: 50%;
-    background: ${theme.colors.surface};
+    background: ${theme.colors.text};
     transition: transform 0.15s ease-out;
   }
 
   &:checked {
-    background: ${theme.colors.switch};
+    border-color: ${theme.colors.brand};
+    background: ${theme.colors.brand};
   }
 
   &:checked::before {
-    transform: translateX(1.25rem);
+    background: ${theme.colors.surface};
+    transform: translateX(1.5rem);
   }
 
   @media (prefers-reduced-motion: reduce) {

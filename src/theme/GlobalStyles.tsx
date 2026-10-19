@@ -11,9 +11,16 @@ const globalStyles = (theme: Theme) => css`
   body {
     margin: 0;
     font-family: ${theme.fonts.body};
+    color: ${theme.colors.text};
   }
 
-  h1,
+  h1 {
+    font-family: ${theme.fonts.display};
+    font-size: ${theme.fontSizes.display};
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
   h2,
   h3 {
     font-family: ${theme.fonts.bold};

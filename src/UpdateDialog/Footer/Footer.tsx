@@ -1,5 +1,7 @@
 import { css } from '@emotion/react'
 import type { Theme } from '@emotion/react'
+import Button from '../../components/Button/Button.tsx'
+import SendIcon from '../../components/icons/SendIcon.tsx'
 import Tag from '../../components/Tag/Tag.tsx'
 import type { TagIntent } from '../../components/Tag/Tag.tsx'
 
@@ -17,11 +19,16 @@ function Footer(props: FooterProps) {
   return (
     <div css={footerStyles}>
       <div css={actionsStyles}>
-        <button type="button" onClick={props.onCancel}>
+        <Button variant="link" onClick={props.onCancel}>
           Cancel
-        </button>
-        <button type="submit">Save draft</button>
-        <button type="button">Publish update</button>
+        </Button>
+        <Button variant="secondary" type="submit">
+          Save draft
+        </Button>
+        <Button variant="primary">
+          <SendIcon />
+          Publish update
+        </Button>
       </div>
 
       {/* Live region for the save confirmation. It's always in the DOM so
@@ -46,13 +53,9 @@ const footerStyles = (theme: Theme) => css`
 const actionsStyles = (theme: Theme) => css`
   display: flex;
   flex-wrap: wrap;
-  gap: ${theme.space.sm};
+  align-items: center;
   justify-content: flex-end;
-
-  button {
-    font: inherit;
-    padding: ${theme.space.sm} ${theme.space.md};
-  }
+  gap: ${theme.space.md};
 `
 
 const statusStyles = css`

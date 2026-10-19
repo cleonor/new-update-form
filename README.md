@@ -1,5 +1,7 @@
 # new-update-form
 
+**Live demo:** deployed on GitHub Pages at [cleonor.github.io/new-update-form](https://cleonor.github.io/new-update-form/)
+
 A modal dialog for writing an update: a title, the update text, and an optional custom author name. Drafts are saved to Local Storage.
 
 Built with React 19, TypeScript and Vite, styled with Emotion, and tested with Vitest and React Testing Library.

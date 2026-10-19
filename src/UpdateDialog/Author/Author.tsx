@@ -1,29 +1,32 @@
-import { useCallback, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import Checkbox from '../../components/Checkbox/Checkbox.tsx'
 import TextInput from '../../components/TextInput/TextInput.tsx'
 import './Author.css'
 
-function Author() {
-  const [isEditable, setIsEditable] = useState(false)
+type AuthorProps = {
+  value: string
+  isEditable: boolean
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void
+  onEditableChange: (event: ChangeEvent<HTMLInputElement>) => void
+}
 
-  const handleToggleChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setIsEditable(event.target.checked)
-    },
-    [],
-  )
-
+function Author(props: AuthorProps) {
   return (
     <fieldset className="author">
       <legend>Author</legend>
       <Checkbox
         label="Edit author name"
         isSwitch
-        checked={isEditable}
-        onChange={handleToggleChange}
+        checked={props.isEditable}
+        onChange={props.onEditableChange}
       />
-      <TextInput label="Author name" name="author" readOnly={!isEditable} />
+      <TextInput
+        label="Author name"
+        name="author"
+        readOnly={!props.isEditable}
+        value={props.value}
+        onChange={props.onChange}
+      />
     </fieldset>
   )
 }

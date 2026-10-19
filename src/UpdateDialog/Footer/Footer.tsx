@@ -1,6 +1,10 @@
 import './Footer.css'
 
-function Footer() {
+type FooterProps = {
+  statusMessage: string
+}
+
+function Footer(props: FooterProps) {
   return (
     <div className="footer">
       <div className="actions">
@@ -9,9 +13,11 @@ function Footer() {
         <button type="button">Publish update</button>
       </div>
 
-      {/* Live region for the save confirmation. It must be in the DOM before
-          the message is added so screen readers announce it. */}
-      <p role="status" className="status"></p>
+      {/* Live region for the save confirmation. It's always in the DOM so
+          screen readers announce the message when it changes. */}
+      <p role="status" className="status">
+        {props.statusMessage}
+      </p>
     </div>
   )
 }

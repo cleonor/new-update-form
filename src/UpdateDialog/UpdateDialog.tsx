@@ -1,3 +1,5 @@
+import { css } from '@emotion/react'
+import type { Theme } from '@emotion/react'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import type {
   ChangeEvent,
@@ -12,7 +14,6 @@ import Footer from './Footer/Footer.tsx'
 import type { SaveStatus } from './Footer/Footer.tsx'
 import Title from './Title/Title.tsx'
 import Update from './Update/Update.tsx'
-import './UpdateDialog.css'
 
 const EMPTY_FIELDS: DraftFields = {
   title: '',
@@ -109,12 +110,12 @@ function UpdateDialog() {
   return (
     <dialog
       ref={dialogRef}
-      className="update-dialog"
+      css={dialogStyles}
       aria-labelledby={headingId}
       onKeyDown={handleKeyDown}
       onCancel={handleCancel}
     >
-      <form className="update-form" onSubmit={handleSubmit}>
+      <form css={formStyles} onSubmit={handleSubmit}>
         <h1 id={headingId}>New update</h1>
         <Title value={fields.title} onChange={handleTitleChange} />
         <Update value={fields.content} onChange={handleContentChange} />
@@ -131,3 +132,30 @@ function UpdateDialog() {
 }
 
 export default UpdateDialog
+
+// Taller content (e.g. a resized textarea) scrolls inside the dialog.
+// dvh follows the visible viewport on mobile; vh is the fallback.
+const dialogStyles = (theme: Theme) => css`
+  width: min(36rem, calc(100vw - 2rem));
+  max-height: 80vh;
+  max-height: 80dvh;
+  overflow-y: auto;
+  padding: ${theme.space.lg};
+  border: 1px solid ${theme.colors.border};
+  border-radius: ${theme.radii.default};
+
+  &::backdrop {
+    background: ${theme.colors.backdrop};
+  }
+`
+
+const formStyles = (theme: Theme) => css`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.space.md};
+
+  h1 {
+    margin: 0;
+    font-size: ${theme.fontSizes.heading};
+  }
+`

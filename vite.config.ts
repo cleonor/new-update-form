@@ -4,7 +4,8 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  // Lets every element take Emotion's `css` prop.
+  plugins: [react({ jsxImportSource: '@emotion/react' })],
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.ts'],

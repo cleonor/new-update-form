@@ -1,4 +1,6 @@
-import './CharacterCount.css'
+import { css } from '@emotion/react'
+import type { Theme } from '@emotion/react'
+import { visuallyHidden } from '../../theme/styles.ts'
 
 type CharacterCountProps = {
   counterId: string
@@ -31,21 +33,17 @@ function CharacterCount(props: CharacterCountProps) {
     : `${props.length} ${unit}`
 
   return (
-    <div className="character-count">
+    <div css={containerStyles}>
       {hasLimit && (
-        <p
-          id={props.limitMessageId}
-          className="character-count__limit"
-          aria-live="polite"
-        >
+        <p id={props.limitMessageId} css={limitStyles} aria-live="polite">
           {isAtLimit &&
             `You've reached the maximum of ${props.maxLength} characters.`}
         </p>
       )}
       {props.showCount && (
-        <p id={props.counterId} className="character-count__count">
+        <p id={props.counterId} css={countStyles}>
           <span aria-hidden="true">{visibleText}</span>
-          <span className="visually-hidden">{spokenText}</span>
+          <span css={visuallyHidden}>{spokenText}</span>
         </p>
       )}
     </div>
@@ -53,3 +51,22 @@ function CharacterCount(props: CharacterCountProps) {
 }
 
 export default CharacterCount
+
+const containerStyles = (theme: Theme) => css`
+  display: flex;
+  justify-content: space-between;
+  gap: ${theme.space.md};
+  font-size: ${theme.fontSizes.small};
+`
+
+const limitStyles = (theme: Theme) => css`
+  margin: 0;
+  color: ${theme.colors.intents.error.text};
+`
+
+// Pushed right even when there's no limit message.
+const countStyles = (theme: Theme) => css`
+  margin: 0 0 0 auto;
+  color: ${theme.colors.mutedText};
+  white-space: nowrap;
+`

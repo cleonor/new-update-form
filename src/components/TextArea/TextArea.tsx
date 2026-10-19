@@ -2,8 +2,13 @@ import { useId } from 'react'
 import type { ComponentProps } from 'react'
 import CharacterCount from '../CharacterCount/CharacterCount.tsx'
 import { useCharacterCount } from '../CharacterCount/useCharacterCount.ts'
+import {
+  atLimitStyles,
+  controlStyles,
+  fieldStyles,
+  textAreaStyles,
+} from '../fieldStyles.ts'
 import { joinIds } from '../joinIds.ts'
-import '../field.css'
 
 // Accepts every native <textarea> attribute (disabled, readOnly, name, rows, maxLength, …).
 // `id` is generated so the label is always linked to the textarea.
@@ -27,11 +32,12 @@ function TextArea(props: TextAreaProps) {
   )
 
   return (
-    <div className={isAtLimit ? 'field field--at-limit' : 'field'}>
+    <div css={fieldStyles}>
       <label htmlFor={id}>{label}</label>
       <textarea
         {...textAreaProps}
         id={id}
+        css={[controlStyles, textAreaStyles, isAtLimit && atLimitStyles]}
         aria-describedby={joinIds(
           textAreaProps['aria-describedby'],
           isAtLimit && limitMessageId,

@@ -2,8 +2,8 @@ import { useId } from 'react'
 import type { ComponentProps } from 'react'
 import CharacterCount from '../CharacterCount/CharacterCount.tsx'
 import { useCharacterCount } from '../CharacterCount/useCharacterCount.ts'
+import { atLimitStyles, controlStyles, fieldStyles } from '../fieldStyles.ts'
 import { joinIds } from '../joinIds.ts'
-import '../field.css'
 
 // Accepts every native <input> attribute (disabled, readOnly, name, value, maxLength, …).
 // `id` is generated so the label is always linked to the input.
@@ -27,12 +27,13 @@ function TextInput(props: TextInputProps) {
   )
 
   return (
-    <div className={isAtLimit ? 'field field--at-limit' : 'field'}>
+    <div css={fieldStyles}>
       <label htmlFor={id}>{label}</label>
       <input
         {...inputProps}
         id={id}
         type="text"
+        css={[controlStyles, isAtLimit && atLimitStyles]}
         aria-describedby={joinIds(
           inputProps['aria-describedby'],
           isAtLimit && limitMessageId,

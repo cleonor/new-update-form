@@ -7,7 +7,7 @@ import type {
   SubmitEvent,
   SyntheticEvent,
 } from 'react'
-import { saveDraft } from '../storage/draftStorage.ts'
+import { clearDraft, saveDraft } from '../storage/draftStorage.ts'
 import type { DraftFields } from '../storage/draftStorage.ts'
 import Author from './Author/Author.tsx'
 import Footer from './Footer/Footer.tsx'
@@ -81,6 +81,14 @@ function UpdateDialog() {
     [],
   )
 
+  // Clears the text fields and the saved draft; the author switch keeps its
+  // position. The status message tells screen reader users something happened.
+  const handleCancelClick = useCallback(() => {
+    setFields((current) => ({ ...current, title: '', content: '', author: '' }))
+    clearDraft()
+    setStatus({ message: 'Form and saved draft cleared.', intent: 'neutral' })
+  }, [])
+
   // The time makes each message different, so screen readers announce every save.
   const handleSubmit = useCallback(
     (event: SubmitEvent<HTMLFormElement>) => {
@@ -125,7 +133,7 @@ function UpdateDialog() {
           onChange={handleAuthorChange}
           onEditableChange={handleAuthorEditableChange}
         />
-        <Footer status={status} />
+        <Footer status={status} onCancel={handleCancelClick} />
       </form>
     </dialog>
   )

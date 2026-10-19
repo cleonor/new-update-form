@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { loadDraft, saveDraft } from './draftStorage.ts'
+import { clearDraft, loadDraft, saveDraft } from './draftStorage.ts'
 
 const fields = {
   title: 'Release',
@@ -15,6 +15,22 @@ describe('draftStorage', () => {
     expect(saved).toMatchObject(fields)
     expect(saved?.savedAt).toEqual(expect.any(String))
     expect(loadDraft()).toEqual(saved)
+  })
+
+  it('clears the saved draft', () => {
+    saveDraft(fields)
+
+    clearDraft()
+
+    expect(loadDraft()).toBeNull()
+  })
+
+  it('does not throw when the browser blocks clearing', () => {
+    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
+      throw new Error('SecurityError')
+    })
+
+    expect(() => clearDraft()).not.toThrow()
   })
 
   it('returns null when nothing is saved', () => {

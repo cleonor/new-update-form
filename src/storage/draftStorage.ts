@@ -24,6 +24,15 @@ export function saveDraft(fields: DraftFields): Draft | null {
   }
 }
 
+// Removing can throw where storage is blocked; there's nothing stored then anyway.
+export function clearDraft(): void {
+  try {
+    localStorage.removeItem(STORAGE_KEY)
+  } catch {
+    // Nothing to clear.
+  }
+}
+
 export function loadDraft(): Draft | null {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)

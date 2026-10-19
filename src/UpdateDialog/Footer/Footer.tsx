@@ -10,13 +10,16 @@ export type SaveStatus = {
 
 type FooterProps = {
   status: SaveStatus | null
+  onCancel: () => void
 }
 
 function Footer(props: FooterProps) {
   return (
     <div css={footerStyles}>
       <div css={actionsStyles}>
-        <button type="button">Cancel</button>
+        <button type="button" onClick={props.onCancel}>
+          Cancel
+        </button>
         <button type="submit">Save draft</button>
         <button type="button">Publish update</button>
       </div>

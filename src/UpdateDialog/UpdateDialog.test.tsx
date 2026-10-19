@@ -130,6 +130,34 @@ describe('UpdateDialog', () => {
     expect(author).toHaveValue('Sam')
   })
 
+  it('clears the text fields and the saved draft when Cancel is clicked', () => {
+    render(<UpdateDialog />)
+    const title = screen.getByLabelText('Title')
+    const update = screen.getByLabelText('Update')
+    const author = screen.getByLabelText('Author name')
+    const toggle = screen.getByRole('switch', { name: 'Change author' })
+
+    fireEvent.change(title, { target: { value: 'Release notes' } })
+    fireEvent.change(update, { target: { value: 'Version 2 is out.' } })
+    fireEvent.click(toggle)
+    fireEvent.change(author, { target: { value: 'Sam' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Save draft' }))
+
+    expect(loadDraft()).not.toBeNull()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+
+    expect(title).toHaveValue('')
+    expect(update).toHaveValue('')
+    expect(author).toHaveValue('')
+    expect(toggle).toBeChecked()
+    expect(loadDraft()).toBeNull()
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Form and saved draft cleared.',
+    )
+    expect(screen.getByRole('dialog')).toBeVisible()
+  })
+
   it('shows an error message when the draft cannot be saved', () => {
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new Error('QuotaExceededError')

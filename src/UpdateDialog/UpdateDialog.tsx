@@ -11,7 +11,7 @@ import { clearDraft, saveDraft } from '../storage/draftStorage.ts'
 import type { DraftFields } from '../storage/draftStorage.ts'
 import Author from './Author/Author.tsx'
 import Footer from './Footer/Footer.tsx'
-import type { SaveStatus } from './Footer/Footer.tsx'
+import type { FormStatus } from './Footer/Footer.tsx'
 import Title from './Title/Title.tsx'
 import Update from './Update/Update.tsx'
 
@@ -26,7 +26,7 @@ function UpdateDialog() {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const headingId = useId()
   const [fields, setFields] = useState<DraftFields>(EMPTY_FIELDS)
-  const [status, setStatus] = useState<SaveStatus | null>(null)
+  const [status, setStatus] = useState<FormStatus | null>(null)
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -86,7 +86,12 @@ function UpdateDialog() {
   const handleCancelClick = useCallback(() => {
     setFields((current) => ({ ...current, title: '', content: '', author: '' }))
     clearDraft()
-    setStatus({ message: 'Form and saved draft cleared.', intent: 'neutral' })
+    setStatus({ kind: 'cleared', message: 'Form cleared.' })
+  }, [])
+
+  // Publishing isn't implemented yet; for now it only confirms the click.
+  const handlePublishClick = useCallback(() => {
+    setStatus({ kind: 'published', message: 'Published' })
   }, [])
 
   // The time makes each message different, so screen readers announce every save.
@@ -102,13 +107,13 @@ function UpdateDialog() {
       setStatus(
         draft
           ? {
+              kind: 'draftSaved',
               message: `Draft saved at ${new Date(draft.savedAt).toLocaleTimeString()}.`,
-              intent: 'success',
             }
           : {
+              kind: 'draftNotSaved',
               message:
                 "Draft couldn't be saved. Your browser's storage may be full or blocked.",
-              intent: 'error',
             },
       )
     },
@@ -133,7 +138,11 @@ function UpdateDialog() {
           onChange={handleAuthorChange}
           onEditableChange={handleAuthorEditableChange}
         />
-        <Footer status={status} onCancel={handleCancelClick} />
+        <Footer
+          status={status}
+          onCancel={handleCancelClick}
+          onPublish={handlePublishClick}
+        />
       </form>
     </dialog>
   )

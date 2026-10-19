@@ -37,8 +37,11 @@ export const theme = {
     accent: '#b9531f', // orange: white text on it is 4.9:1
     focus: '#005fcc', // 6:1 on white
     backdrop: 'rgb(52 48 72 / 0.65)',
+    // Text on its own background: neutral 9.5:1, brand 6.4:1, accent 6.6:1.
     intents: {
-      neutral: { text: '#333333', background: '#f0f0f0' },
+      neutral: { text: '#3d3b45', background: '#efeef3' },
+      brand: { text: '#5b34c9', background: '#efeafb' },
+      accent: { text: '#8a3a12', background: '#fbe9e0' },
       info: { text: '#0a4a8a', background: '#e6f0fb' },
       success: { text: '#1e6b34', background: '#e6f4ea' },
       warning: { text: '#7a4b00', background: '#fff4e0' },

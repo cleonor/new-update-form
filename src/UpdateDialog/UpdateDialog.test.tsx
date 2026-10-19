@@ -152,9 +152,20 @@ describe('UpdateDialog', () => {
     expect(author).toHaveValue('')
     expect(toggle).toBeChecked()
     expect(loadDraft()).toBeNull()
-    expect(screen.getByRole('status')).toHaveTextContent(
-      'Form and saved draft cleared.',
-    )
+    expect(screen.getByRole('status')).toHaveTextContent('Form cleared.')
+    expect(screen.getByRole('dialog')).toBeVisible()
+  })
+
+  it('only shows a Published message when Publish update is clicked', () => {
+    render(<UpdateDialog />)
+    const title = screen.getByLabelText('Title')
+
+    fireEvent.change(title, { target: { value: 'Release notes' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Publish update' }))
+
+    expect(screen.getByRole('status')).toHaveTextContent('Published')
+    expect(title).toHaveValue('Release notes')
+    expect(loadDraft()).toBeNull()
     expect(screen.getByRole('dialog')).toBeVisible()
   })
 

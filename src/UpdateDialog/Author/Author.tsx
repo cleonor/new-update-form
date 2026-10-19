@@ -1,11 +1,11 @@
-import { useCallback, useId, useState } from 'react'
-import type { ChangeEvent, KeyboardEvent } from 'react'
+import { useCallback, useState } from 'react'
+import type { ChangeEvent } from 'react'
+import Checkbox from '../../components/Checkbox/Checkbox.tsx'
+import TextInput from '../../components/TextInput/TextInput.tsx'
 import './Author.css'
 
 function Author() {
   const [isEditable, setIsEditable] = useState(false)
-  const inputId = useId()
-  const toggleId = useId()
 
   const handleToggleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -14,33 +14,16 @@ function Author() {
     [],
   )
 
-  // Checkboxes only toggle on Space natively. Switches may also toggle on Enter,
-  // and preventing the default stops Enter from submitting the form.
-  const handleToggleKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key !== 'Enter') return
-      event.preventDefault()
-      if (!event.repeat) setIsEditable((current) => !current)
-    },
-    [],
-  )
-
   return (
-    <fieldset className="field">
+    <fieldset className="author">
       <legend>Author</legend>
-      <div className="toggle">
-        <input
-          id={toggleId}
-          type="checkbox"
-          role="switch"
-          checked={isEditable}
-          onChange={handleToggleChange}
-          onKeyDown={handleToggleKeyDown}
-        />
-        <label htmlFor={toggleId}>Edit author name</label>
-      </div>
-      <label htmlFor={inputId}>Author name</label>
-      <input id={inputId} name="author" type="text" readOnly={!isEditable} />
+      <Checkbox
+        label="Edit author name"
+        isSwitch
+        checked={isEditable}
+        onChange={handleToggleChange}
+      />
+      <TextInput label="Author name" name="author" readOnly={!isEditable} />
     </fieldset>
   )
 }

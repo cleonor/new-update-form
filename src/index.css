@@ -17,3 +17,8 @@ h3 {
   font-family: var(--font-bold);
   font-weight: 700;
 }
+
+:focus-visible {
+  outline: 3px solid #005fcc;
+  outline-offset: 2px;
+}

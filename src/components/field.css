@@ -1,0 +1,22 @@
+/* Shared by TextInput and TextArea. */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.field input,
+.field textarea {
+  font: inherit;
+  padding: 0.5rem;
+}
+
+.field input:read-only,
+.field textarea:read-only {
+  background: #f0f0f0;
+}
+
+.field input:disabled,
+.field textarea:disabled {
+  cursor: not-allowed;
+}

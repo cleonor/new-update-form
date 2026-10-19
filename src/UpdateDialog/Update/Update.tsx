@@ -1,14 +1,7 @@
-import { useId } from 'react'
+import TextArea from '../../components/TextArea/TextArea.tsx'
 
 function Update() {
-  const id = useId()
-
-  return (
-    <div className="field">
-      <label htmlFor={id}>Update</label>
-      <textarea id={id} name="content" rows={6} />
-    </div>
-  )
+  return <TextArea label="Update" name="content" rows={6} />
 }
 
 export default Update

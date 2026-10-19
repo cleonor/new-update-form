@@ -1,14 +1,7 @@
-import { useId } from 'react'
+import TextInput from '../../components/TextInput/TextInput.tsx'
 
 function Title() {
-  const id = useId()
-
-  return (
-    <div className="field">
-      <label htmlFor={id}>Title</label>
-      <input id={id} name="title" type="text" />
-    </div>
-  )
+  return <TextInput label="Title" name="title" />
 }
 
 export default Title

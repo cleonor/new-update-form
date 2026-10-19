@@ -1,0 +1,19 @@
+/* Fonts come from https://innn.it/fonts/expose-fonts.css (linked in index.html).
+   Each weight is its own family, so pick the family rather than setting font-weight. */
+:root {
+  --font-body: 'Soehne Buch', system-ui, sans-serif;
+  --font-medium: 'Soehne Kraeftig', system-ui, sans-serif;
+  --font-bold: 'Soehne Dreiviertelfett', system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-bold);
+  font-weight: 700;
+}

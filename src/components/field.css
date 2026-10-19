@@ -11,6 +11,14 @@
   padding: 0.5rem;
 }
 
+/* Placeholders are hints only; the label always names the field.
+   #595959 is 7:1 on white and 6.2:1 on the read-only grey. Firefox
+   lowers placeholder opacity by default, so reset it. */
+.field ::placeholder {
+  color: #595959;
+  opacity: 1;
+}
+
 /* Only the height can be changed, so a textarea never grows wider than its container. */
 .field textarea {
   resize: vertical;

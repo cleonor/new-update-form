@@ -2,6 +2,7 @@ import { useId } from 'react'
 import type { ComponentProps } from 'react'
 import CharacterCount from '../CharacterCount/CharacterCount.tsx'
 import { useCharacterCount } from '../CharacterCount/useCharacterCount.ts'
+import { joinIds } from '../joinIds.ts'
 import '../field.css'
 
 // Accepts every native <textarea> attribute (disabled, readOnly, name, rows, maxLength, …).
@@ -22,18 +23,16 @@ function TextArea(props: TextAreaProps) {
     textAreaProps.onChange,
   )
 
-  const describedBy =
-    [textAreaProps['aria-describedby'], showCharacterCount && counterId]
-      .filter(Boolean)
-      .join(' ') || undefined
-
   return (
     <div className="field">
       <label htmlFor={id}>{label}</label>
       <textarea
         {...textAreaProps}
         id={id}
-        aria-describedby={describedBy}
+        aria-describedby={joinIds(
+          textAreaProps['aria-describedby'],
+          showCharacterCount && counterId,
+        )}
         onChange={handleChange}
       />
       {showCharacterCount && (

@@ -13,13 +13,43 @@ describe('UpdateDialog', () => {
     expect(screen.getByLabelText('Author name')).toBeInTheDocument()
   })
 
+  it('shows a placeholder in the update field', () => {
+    render(<UpdateDialog />)
+
+    expect(screen.getByLabelText('Update')).toHaveAttribute(
+      'placeholder',
+      'Please write a few words about your update.',
+    )
+  })
+
+  it('groups the author controls under the name "Author"', () => {
+    render(<UpdateDialog />)
+
+    const group = screen.getByRole('group', { name: 'Author' })
+
+    expect(group).toContainElement(
+      screen.getByRole('switch', { name: 'Change author' }),
+    )
+    expect(group).toContainElement(screen.getByLabelText('Author name'))
+  })
+
+  it('explains the change author switch to screen readers', () => {
+    render(<UpdateDialog />)
+
+    expect(
+      screen.getByRole('switch', { name: 'Change author' }),
+    ).toHaveAccessibleDescription(
+      'You can choose to publish this update under a different name.',
+    )
+  })
+
   it('makes the author name editable only when the toggle is on', () => {
     render(<UpdateDialog />)
     const author = screen.getByLabelText('Author name')
 
     expect(author).toHaveAttribute('readonly')
 
-    fireEvent.click(screen.getByRole('switch', { name: 'Edit author name' }))
+    fireEvent.click(screen.getByRole('switch', { name: 'Change author' }))
 
     expect(author).not.toHaveAttribute('readonly')
   })
@@ -27,7 +57,7 @@ describe('UpdateDialog', () => {
   it('toggles author editing with the Enter key', () => {
     render(<UpdateDialog />)
     const author = screen.getByLabelText('Author name')
-    const toggle = screen.getByRole('switch', { name: 'Edit author name' })
+    const toggle = screen.getByRole('switch', { name: 'Change author' })
 
     fireEvent.keyDown(toggle, { key: 'Enter' })
 
@@ -49,7 +79,7 @@ describe('UpdateDialog', () => {
     fireEvent.change(screen.getByLabelText('Update'), {
       target: { value: 'Version 2 is out.' },
     })
-    fireEvent.click(screen.getByRole('switch', { name: 'Edit author name' }))
+    fireEvent.click(screen.getByRole('switch', { name: 'Change author' }))
     fireEvent.change(screen.getByLabelText('Author name'), {
       target: { value: 'Sam' },
     })
@@ -66,7 +96,7 @@ describe('UpdateDialog', () => {
 
   it('keeps showing but stops saving the author name when editing is turned off', () => {
     render(<UpdateDialog />)
-    const toggle = screen.getByRole('switch', { name: 'Edit author name' })
+    const toggle = screen.getByRole('switch', { name: 'Change author' })
     const author = screen.getByLabelText('Author name')
     const saveButton = screen.getByRole('button', { name: 'Save draft' })
 

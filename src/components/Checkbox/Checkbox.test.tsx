@@ -19,6 +19,23 @@ describe('Checkbox', () => {
     ).toBeInTheDocument()
   })
 
+  it('shows info text and uses it as the description', () => {
+    render(<Checkbox label="Subscribe" infoText="Weekly, no spam." />)
+
+    expect(screen.getByText('Weekly, no spam.')).toBeInTheDocument()
+    expect(
+      screen.getByRole('checkbox', { name: 'Subscribe' }),
+    ).toHaveAccessibleDescription('Weekly, no spam.')
+  })
+
+  it('has no description without info text', () => {
+    render(<Checkbox label="Subscribe" />)
+
+    expect(
+      screen.getByRole('checkbox', { name: 'Subscribe' }),
+    ).not.toHaveAccessibleDescription()
+  })
+
   it('toggles with the Enter key', () => {
     render(<Checkbox label="Subscribe" />)
     const checkbox = screen.getByRole('checkbox', { name: 'Subscribe' })

@@ -7,8 +7,16 @@
   border: 0;
 }
 
-.author legend {
-  padding: 0;
-  margin-bottom: 0.5rem;
-  font-family: var(--font-medium);
+/* Title on the left, switch on the right. Baseline alignment lines up
+   "Author" with the switch's label text, whatever the switch's height. */
+.author__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Keep the switch on the right, above its right-aligned info text. */
+.author .checkbox__control {
+  align-self: flex-end;
 }

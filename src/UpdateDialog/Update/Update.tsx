@@ -7,11 +7,14 @@ type UpdateProps = {
 }
 
 function Update(props: UpdateProps) {
+  const placeholderText: string = "Please write a few words about your update.";
+
   return (
     <TextArea
       label="Update"
       name="content"
       rows={6}
+      placeholder={placeholderText}
       showCharacterCount
       value={props.value}
       onChange={props.onChange}

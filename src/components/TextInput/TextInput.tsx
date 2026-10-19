@@ -2,6 +2,7 @@ import { useId } from 'react'
 import type { ComponentProps } from 'react'
 import CharacterCount from '../CharacterCount/CharacterCount.tsx'
 import { useCharacterCount } from '../CharacterCount/useCharacterCount.ts'
+import { joinIds } from '../joinIds.ts'
 import '../field.css'
 
 // Accepts every native <input> attribute (disabled, readOnly, name, value, maxLength, …).
@@ -22,11 +23,6 @@ function TextInput(props: TextInputProps) {
     inputProps.onChange,
   )
 
-  const describedBy =
-    [inputProps['aria-describedby'], showCharacterCount && counterId]
-      .filter(Boolean)
-      .join(' ') || undefined
-
   return (
     <div className="field">
       <label htmlFor={id}>{label}</label>
@@ -34,7 +30,10 @@ function TextInput(props: TextInputProps) {
         {...inputProps}
         id={id}
         type="text"
-        aria-describedby={describedBy}
+        aria-describedby={joinIds(
+          inputProps['aria-describedby'],
+          showCharacterCount && counterId,
+        )}
         onChange={handleChange}
       />
       {showCharacterCount && (
